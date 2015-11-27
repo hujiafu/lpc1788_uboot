@@ -368,6 +368,39 @@ static const struct lpc178x_gpio_pin_config ea_lpc1788_gpio[] = {
 #endif
 };
 
+struct lpc178x_lcd_regs {
+	u32	lcd_timh;
+	u32 lcd_timv;
+	u32 lcd_pol;
+	u32 lcd_le;
+	u32 lcd_upbase;
+	u32 lcd_lpbase;
+	u32 lcd_ctrl;
+	u32 lcd_intmsk;
+	u32 lcd_intraw;
+	u32 lcd_intstat;
+	u32 lcd_intclr;
+	u32 lcd_upcurr;
+	u32 lcd_lpcurr;
+	u32 lcd_rcv1[115];
+	u32 lcd_pal[128];
+	u32 lcd_rcv2[256];
+	u32 crsr_img[256];
+	u32 crsr_ctrl;
+	u32 crsr_cfg;
+	u32 crsr_pal0;
+	u32 crsr_pal1;
+	u32 crsr_xy;
+	u32 crsr_clip;
+	u32 crsr_rcv1[2];
+	u32 crsr_intmsk;
+	u32 crsr_intclr;
+	u32 crsr_intraw;
+	u32 crsr_intstat;
+};
+
+#define LPC178X_LCD_BASE		(LPC178X_AHB_PERIPH_BASE + 0x00008000)
+#define LPC178X_LCD			((volatile struct lpc178x_lcd_regs *)LPC178X_LCD_BASE)
 /*
  * Configure all necessary GPIO pins
  */
@@ -587,7 +620,16 @@ ulong board_flash_get_legacy (ulong base, int banknum, flash_info_t *info)
 
 
 void board_video_init(GraphicDevice *pGD){
+	
+	lpc178x_periph_enable(LPC178X_SCC_PCONP_LCD_MSK, 1);
 
-
+	LPC178X_LCD->crsr_ctrl &= ~(0x1<<0); //不使用光标
+	LPC178X_LCD->lcd_ctrl = 0x0;
+	LPC178X_LCD->lcd_ctrl |= (0x1<<5);   // TFT panel
+	LPC178X_LCD->lcd_ctrl &= ~(0x1<<7);  // single panel
+	LPC178X_LCD->lcd_ctrl &= ~(0x1<<8);  // RGB normal sequence
+	LPC178X_LCD->lcd_ctrl &= ~(0x1<<9);  // little order
+	LPC178X_LCD->lcd_ctrl &= ~(0x1<<10); // little order in one byte
+	LPC178X_LCD->lcd_ctrl &= ~(0x1<<11); // disable LCD_VD[0:23] 
 }
 

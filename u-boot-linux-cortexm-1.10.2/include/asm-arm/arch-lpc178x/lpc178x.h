@@ -51,6 +51,7 @@
  * peripherals that enable power on them. One of these masks should be passed
  * as the first argument of `lpc178x_periph_enable`.
  */
+#define LPC178X_SCC_PCONP_LCD_MSK	(1 << 0)
 #define LPC178X_SCC_PCONP_PCUART0_MSK	(1 << 3)
 #define LPC178X_SCC_PCONP_PCUART1_MSK	(1 << 4)
 #define LPC178X_SCC_PCONP_PCUART4_MSK	(1 << 8)
