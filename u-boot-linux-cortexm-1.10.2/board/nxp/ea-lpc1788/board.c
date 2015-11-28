@@ -366,7 +366,66 @@ static const struct lpc178x_gpio_pin_config ea_lpc1788_gpio[] = {
 	{{4, 27}, LPC178X_GPIO_CONFIG_D(1, LPC178X_NO_PULLUP, 0, 0, 1, 0)},
 
 #endif
+
+#ifdef CONFIG_VIDEO
+	{{2, 12}, LPC178X_GPIO_CONFIG_D(5, LPC178X_NO_PULLUP, 0, 0, 0, 0)}, //LCD_VD[3]
+	{{2, 6}, LPC178X_GPIO_CONFIG_D(7, LPC178X_NO_PULLUP, 0, 0, 0, 0)}, //LCD_VD[4]
+	{{2, 7}, LPC178X_GPIO_CONFIG_D(7, LPC178X_NO_PULLUP, 0, 0, 0, 0)}, //LCD_VD[5]
+	{{2, 8}, LPC178X_GPIO_CONFIG_D(7, LPC178X_NO_PULLUP, 0, 0, 0, 0)}, //LCD_VD[6]
+	{{4, 29}, LPC178X_GPIO_CONFIG_D(5, LPC178X_NO_PULLUP, 0, 0, 0, 0)}, //LCD_VD[7]
+	
+	{{1, 20}, LPC178X_GPIO_CONFIG_D(7, LPC178X_NO_PULLUP, 0, 0, 0, 0)}, //LCD_VD[10]
+	{{1, 21}, LPC178X_GPIO_CONFIG_D(7, LPC178X_NO_PULLUP, 0, 0, 0, 0)}, //LCD_VD[11]
+	{{1, 22}, LPC178X_GPIO_CONFIG_D(7, LPC178X_NO_PULLUP, 0, 0, 0, 0)}, //LCD_VD[12]
+	{{1, 23}, LPC178X_GPIO_CONFIG_D(7, LPC178X_NO_PULLUP, 0, 0, 0, 0)}, //LCD_VD[13]
+	{{1, 24}, LPC178X_GPIO_CONFIG_D(7, LPC178X_NO_PULLUP, 0, 0, 0, 0)}, //LCD_VD[14]
+	{{1, 25}, LPC178X_GPIO_CONFIG_D(7, LPC178X_NO_PULLUP, 0, 0, 0, 0)}, //LCD_VD[15]
+	
+	{{2, 13}, LPC178X_GPIO_CONFIG_D(5, LPC178X_NO_PULLUP, 0, 0, 0, 0)}, //LCD_VD[19]
+	{{1, 26}, LPC178X_GPIO_CONFIG_D(7, LPC178X_NO_PULLUP, 0, 0, 0, 0)}, //LCD_VD[20]
+	{{1, 27}, LPC178X_GPIO_CONFIG_D(7, LPC178X_NO_PULLUP, 0, 0, 0, 0)}, //LCD_VD[21]
+	{{1, 28}, LPC178X_GPIO_CONFIG_D(7, LPC178X_NO_PULLUP, 0, 0, 0, 0)}, //LCD_VD[22]
+	{{1, 29}, LPC178X_GPIO_CONFIG_D(7, LPC178X_NO_PULLUP, 0, 0, 0, 0)}, //LCD_VD[23]
+	
+	{{2, 2}, LPC178X_GPIO_CONFIG_D(7, LPC178X_NO_PULLUP, 0, 0, 0, 0)}, //LCD_DCLK
+	{{2, 3}, LPC178X_GPIO_CONFIG_D(7, LPC178X_NO_PULLUP, 0, 0, 0, 0)}, //LCD_FP
+	{{2, 4}, LPC178X_GPIO_CONFIG_D(7, LPC178X_NO_PULLUP, 0, 0, 0, 0)}, //LCD_ENABLE_M
+	{{2, 5}, LPC178X_GPIO_CONFIG_D(7, LPC178X_NO_PULLUP, 0, 0, 0, 0)}, //LCD_LP
+	
+	{{2, 0}, LPC178X_GPIO_CONFIG_D(0, LPC178X_NO_PULLUP, 0, 0, 0, 0)}, //LCD_PWR PWM1[1]
+
+
+#endif	
 };
+
+struct lpc178x_pwm_regs {
+	u32 pwm_ir;
+	u32 pwm_tcr;
+	u32 pwm_tc;
+	u32 pwm_pr;
+	u32 pwm_pc;
+	u32 pwm_mcr;
+	u32 pwm_mr0;
+	u32 pwm_mr1;
+	u32 pwm_mr2;
+	u32 pwm_mr3;
+	u32 pwm_ccr;
+	u32 pwm_cr0;
+	u32 pwm_cr1;
+	u32 pwm_cr2;
+	u32 pwm_cr3;
+	u32 pwm_rcv0[1];
+	u32 pwm_mr4;
+	u32 pwm_mr5;
+	u32 pwm_mr6;
+	u32 pwm_pcr;
+	u32 pwm_ler;
+	u32 pwm_rcv1[7];
+	u32 pwm_ctcr;
+};
+#define LPC178X_PWM0_BASE		(LPC178X_APB0PERIPH_BASE + 0x00014000)
+#define LPC178X_PWM1_BASE		(LPC178X_APB0PERIPH_BASE + 0x00018000)
+#define LPC178X_PWM1			((volatile struct lpc178x_pwm_regs *)LPC178X_PWM1_BASE)
 
 struct lpc178x_lcd_regs {
 	u32 lcd_timh;
@@ -617,6 +676,21 @@ ulong board_flash_get_legacy (ulong base, int banknum, flash_info_t *info)
 		return 0;
 }
 #endif
+
+void pwm_init(){
+	
+	lpc178x_periph_enable(LPC178X_SCC_PCONP_PWM1_MSK, 1);
+
+	LPC178X_PWM1->pwm_ir = 0x73f; //clear all pending
+	LPC178X_PWM1->pwm_tcr = 0x0;
+	LPC178X_PWM1->pwm_ctcr = 0x0;
+	LPC178X_PWM1->pwm_mcr = 0x0;
+	LPC178X_PWM1->pwm_ccr = 0x0;
+	LPC178X_PWM1->pwm_pcr = 0x0;
+	LPC178X_PWM1->pwm_ler = 0x0;
+
+}
+
 
 #define C_GLCD_PWR_ENA_DIA_DLY	10000
 
