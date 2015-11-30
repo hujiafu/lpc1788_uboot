@@ -743,7 +743,9 @@ void board_video_init(GraphicDevice *pGD){
 	int lcd_div;
 
 	pclk = clock_get(CLOCK_PCLK);
-	lcd_div = pclk / (pGD->modeIdent[0]);
+	lcd_div = pclk / (pGD->modeIdent[0] * 1000000);
+
+	printf("lcd_div = %d\n", lcd_div);
 
 	lpc178x_periph_enable(LPC178X_SCC_PCONP_LCD_MSK, 1);
 	

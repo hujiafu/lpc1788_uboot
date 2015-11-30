@@ -17,7 +17,7 @@ void *video_hw_init(void){
 	struct ctfb_res_modes *res_mode;
 	struct ctfb_res_modes var_mode;
 
-	printf("Video:");
+	printf("Video: video_hw_init\n");
 	
 	tmp = 0;
 
@@ -64,6 +64,8 @@ void *video_hw_init(void){
 	pGD->plnSizeX = res_mode->xres;
 	pGD->plnSizeY = res_mode->yres;
 
+	printf("clk = %ld, lm = %d, rm = %d, um = %d, lm = %d, hync = %d, vync = %d, x = %d, y = %d\n", pGD->modeIdent[0], pGD->modeIdent[1], pGD->modeIdent[2],\
+				pGD->modeIdent[3], pGD->modeIdent[4], pGD->modeIdent[5], pGD->modeIdent[6], pGD->winSizeX, pGD->winSizeY);
 	switch(bits_per_pixel){
 		case 8:
 			pGD->gdfBytesPP = 1;
