@@ -637,6 +637,10 @@ void GLCD_Ctrl(unsigned int bEna){
 
 void board_video_init(GraphicDevice *pGD){
 	
+	long pclk;
+
+	pclk = clock_get(CLOCK_PCLK);
+
 	lpc178x_periph_enable(LPC178X_SCC_PCONP_LCD_MSK, 1);
 	
 	GLCD_Ctrl(0);
@@ -648,6 +652,9 @@ void board_video_init(GraphicDevice *pGD){
 	LPC178X_LCD->lcd_ctrl &= ~(0x1<<8);  // RGB normal sequence
 	LPC178X_LCD->lcd_ctrl &= ~(0x1<<9);  // little order
 	LPC178X_LCD->lcd_ctrl &= ~(0x1<<10); // little order in one byte
-	LPC178X_LCD->lcd_ctrl &= ~(0x1<<11); // disable LCD_VD[0:23] 
+	LPC178X_LCD->lcd_ctrl &= ~(0x1<<11); // disable LCD_VD[0:23]
+
+	//LPC178X_LCD->lcd_cfg = pclk;
+ 
 }
 
