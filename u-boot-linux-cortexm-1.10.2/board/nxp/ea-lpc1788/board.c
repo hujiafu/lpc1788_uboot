@@ -618,10 +618,28 @@ ulong board_flash_get_legacy (ulong base, int banknum, flash_info_t *info)
 }
 #endif
 
+#define C_GLCD_PWR_ENA_DIA_DLY	10000
+
+void GLCD_Ctrl(unsigned int bEna){
+	volatile unsigned long i;	
+
+	if(bEna){
+		LPC178X_LCD->lcd_ctrl |= (1<<0);
+		for(i=C_GLCD_PWR_ENA_DIA_DLY; i; i--);
+		LPC178X_LCD->lcd_ctrl |= (1<<11);
+	}else{
+		LPC178X_LCD->lcd_ctrl &= ~(1<<11);
+		for(i=C_GLCD_PWR_ENA_DIA_DLY; i; i--);
+		LPC178X_LCD->lcd_ctrl &= ~(1<<0);
+	}
+}
+
 
 void board_video_init(GraphicDevice *pGD){
 	
 	lpc178x_periph_enable(LPC178X_SCC_PCONP_LCD_MSK, 1);
+	
+	GLCD_Ctrl(0);
 
 	LPC178X_LCD->crsr_ctrl &= ~(0x1<<0); //不使用光标
 	LPC178X_LCD->lcd_ctrl = 0x0;

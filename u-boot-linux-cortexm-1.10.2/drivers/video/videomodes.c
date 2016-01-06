@@ -105,7 +105,7 @@ const struct ctfb_res_modes res_mode_init[RES_MODES_COUNT] = {
 	{960, 720, 13100, 160, 40, 32, 8, 80, 4, 0, FB_VMODE_NONINTERLACED},
 	{1152, 864, 12004, 200, 64, 32, 16, 80, 4, 0, FB_VMODE_NONINTERLACED},
 	{1280, 1024, 9090, 200, 48, 26, 1, 184, 3, 0, FB_VMODE_NONINTERLACED},
-	{480, 272, 158025, 26, 6, 1, 11, 37, 2, 0, FB_VMODE_NONINTERLACED},
+	{480, 272, 158025, 40, 5, 8, 8, 2, 2, 0, FB_VMODE_NONINTERLACED},
 };
 
 /************************************************************************
