@@ -21,6 +21,8 @@ void *video_hw_init(void){
 	
 	tmp = 0;
 
+	memset(&smi, 0, sizeof(GraphicDevice));
+
 	videomode = CONFIG_SYS_DEFAULT_VIDEO_MODE;
 
 	if((penv = getenv("videomode")) != NULL){
@@ -48,7 +50,14 @@ void *video_hw_init(void){
 		bits_per_pixel = video_get_params(res_mode, penv);
 	}
 	
-	sprintf(pGD->modeIdent, "%dx%dx%d %ldkHz %ldHz", res_mode->xres, res_mode->yres, bits_per_pixel, (hsynch/1000), (vsynch/1000));
+	//sprintf(pGD->modeIdent, "%dx%dx%d %ldkHz %ldHz", res_mode->xres, res_mode->yres, bits_per_pixel, (hsynch/1000), (vsynch/1000));
+	pGD->modeIdent[0] = res_mode->pixclock;
+	pGD->modeIdent[1] = res_mode->left_margin;
+	pGD->modeIdent[2] = res_mode->right_margin;
+	pGD->modeIdent[3] = res_mode->upper_margin;
+	pGD->modeIdent[4] = res_mode->lower_margin;
+	pGD->modeIdent[5] = res_mode->hsync_len;
+	pGD->modeIdent[6] = res_mode->vsync_len;
 
 	pGD->winSizeX = res_mode->xres;
 	pGD->winSizeY = res_mode->yres;
@@ -75,7 +84,13 @@ void *video_hw_init(void){
 	}
 		
 	pGD->frameAdrs = LCD_VIDEO_ADDR;
-	pGD->memSize = VIDEO_MEM_SIZE;
+	pGD->memSize = (pGD->winSizeX) * (pGD->winSizeY) * (pGD->gdfBytesPP);
+	pGD->isaBase = 0;
+	pGD->pciBase = 0;
+	/* Cursor Start Address */
+	pGD->dprBase = 0;
+	pGD->vprBase = 0;
+	pGD->cprBase = 0;
 
 	board_video_init(pGD);
 

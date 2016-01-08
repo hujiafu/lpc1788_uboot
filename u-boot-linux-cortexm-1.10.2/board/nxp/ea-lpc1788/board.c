@@ -369,7 +369,7 @@ static const struct lpc178x_gpio_pin_config ea_lpc1788_gpio[] = {
 };
 
 struct lpc178x_lcd_regs {
-	u32	lcd_timh;
+	u32 lcd_timh;
 	u32 lcd_timv;
 	u32 lcd_pol;
 	u32 lcd_le;
@@ -638,8 +638,10 @@ void GLCD_Ctrl(unsigned int bEna){
 void board_video_init(GraphicDevice *pGD){
 	
 	long pclk;
+	int lcd_div;
 
 	pclk = clock_get(CLOCK_PCLK);
+	lcd_div = pclk / (pGD->modeIdent[0]);
 
 	lpc178x_periph_enable(LPC178X_SCC_PCONP_LCD_MSK, 1);
 	
@@ -654,7 +656,38 @@ void board_video_init(GraphicDevice *pGD){
 	LPC178X_LCD->lcd_ctrl &= ~(0x1<<10); // little order in one byte
 	LPC178X_LCD->lcd_ctrl &= ~(0x1<<11); // disable LCD_VD[0:23]
 
-	//LPC178X_LCD->lcd_cfg = pclk;
- 
+	if(lcd_div > 0)
+		lcd_div -= 1;
+	else
+		lcd_div = 0;
+
+	LPC178X_SCC->lcd_cfg = lcd_div;
+
+	LPC178X_LCD->lcd_pol |= (1<<26); // bypass inrenal clk divider
+	LPC178X_LCD->lcd_pol &= ~(1<<5); // clock source for LCD is CCLK
+	LPC178X_LCD->lcd_pol |= (1<<11); // LCDFP pin is active Low and inactive HIGH
+	LPC178X_LCD->lcd_pol |= (1<<12); // LCDLP pin is active Low and inactive HIGH
+	LPC178X_LCD->lcd_pol |= (1<<13); // data is driven out into the LCD on the falling edge
+
+	//active high
+	LPC178X_LCD->lcd_pol &= ~(1<<14); // LCD_ENAB_M is active high
+	LPC178X_LCD->lcd_pol &= ~(0x3ff<<16);
+	LPC178X_LCD->lcd_pol |= ((pGD->winSizeX)-1)<<16; //pixel per line 
+	
+	// init Horizontal Timing
+	LPC178X_LCD->lcd_timh = 0; 
+	LPC178X_LCD->lcd_timh |= ((pGD->modeIdent[1]) - 1)<<24; 
+	LPC178X_LCD->lcd_timh |= ((pGD->modeIdent[2]) - 1)<<16; 
+	LPC178X_LCD->lcd_timh |= ((pGD->modeIdent[5]) - 1)<<8; 
+	LPC178X_LCD->lcd_timh |= ((pGD->winSizeX)/16 - 1)<<2; 
+	
+	// init Vertical Timing
+	LPC178X_LCD->lcd_timv = 0; 
+	LPC178X_LCD->lcd_timv |= (pGD->modeIdent[3])<<24; 
+	LPC178X_LCD->lcd_timv |= (pGD->modeIdent[4])<<16; 
+	LPC178X_LCD->lcd_timv |= ((pGD->modeIdent[6]) - 1)<<10; 
+	LPC178X_LCD->lcd_timv |= (pGD->winSizeY) - 1; 
+	 
+	GLCD_Ctrl(1);
 }
 
