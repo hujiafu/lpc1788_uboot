@@ -677,8 +677,17 @@ ulong board_flash_get_legacy (ulong base, int banknum, flash_info_t *info)
 }
 #endif
 
+#define PWM_CLK	1000000
+#define PWM_TOTCNT	1000
+#define PWM_LOWCNT_START	600
 void pwm_init(){
 	
+	long pclk;	
+	int pwm_div;	
+
+	pclk = clock_get(CLOCK_PCLK);
+	pwm_div = pclk/PWM_CLK - 1;
+
 	lpc178x_periph_enable(LPC178X_SCC_PCONP_PWM1_MSK, 1);
 
 	LPC178X_PWM1->pwm_ir = 0x73f; //clear all pending
@@ -688,6 +697,25 @@ void pwm_init(){
 	LPC178X_PWM1->pwm_ccr = 0x0;
 	LPC178X_PWM1->pwm_pcr = 0x0;
 	LPC178X_PWM1->pwm_ler = 0x0;
+
+	LPC178X_PWM1->pwm_pr = pwm_div;
+	LPC178X_PWM1->pwm_mr0 = PWM_TOTCNT;
+	LPC178X_PWM1->pwm_ler |= 0x1<<0; //update mr0
+	//LPC178X_PWM1->pwm_tcr |= 0x1<<1; //pwm counter reset
+	//LPC178X_PWM1->pwm_tcr &= 0x9; //
+
+	LPC178X_PWM1->pwm_mr1 = PWM_LOWCNT_START;
+	LPC178X_PWM1->pwm_ler |= 0x1<<1; //update mr1
+	//LPC178X_PWM1->pwm_tcr |= 0x1<<1; //pwm counter reset
+	//LPC178X_PWM1->pwm_tcr &= 0x9; //
+	
+	LPC178X_PWM1->pwm_mcr = 0x1<<1; //PWMTC reset when PWMTC == PWMMR0
+	LPC178X_PWM1->pwm_pcr |= 0x1<<9; //pwm1[1] output enable
+	LPC178X_PWM1->pwm_tcr |= 0x1<<1; //pwm counter reset
+	LPC178X_PWM1->pwm_tcr &= 0x9; //
+	
+	LPC178X_PWM1->pwm_tcr |= 0x1<<0; //pwm counter enable
+	LPC178X_PWM1->pwm_tcr |= 0x1<<3; //pwm enable
 
 }
 
@@ -763,5 +791,7 @@ void board_video_init(GraphicDevice *pGD){
 	LPC178X_LCD->lcd_timv |= (pGD->winSizeY) - 1; 
 	 
 	GLCD_Ctrl(1);
+
+	pwm_init();
 }
 
