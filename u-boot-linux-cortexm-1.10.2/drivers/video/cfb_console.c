@@ -1417,8 +1417,8 @@ int drv_video_init (void)
 	console_dev.getc = VIDEO_GETC_FCT;	/* 'getc' function */
 #endif /* CONFIG_VGA_AS_SINGLE_DEVICE */
 
-	if (stdio_register (&console_dev) != 0)
-		return 0;
+	//if (stdio_register (&console_dev) != 0)
+	//	return 0;
 
 	/* Return success */
 	return 1;
