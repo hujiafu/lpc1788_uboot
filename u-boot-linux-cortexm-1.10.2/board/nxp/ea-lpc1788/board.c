@@ -753,6 +753,7 @@ void board_video_init(GraphicDevice *pGD){
 
 	LPC178X_LCD->crsr_ctrl &= ~(0x1<<0); //不使用光标
 	LPC178X_LCD->lcd_ctrl = 0x0;
+	LPC178X_LCD->lcd_ctrl |= (0x6<<1);   //16bpp, 5:6:5 mode
 	LPC178X_LCD->lcd_ctrl |= (0x1<<5);   // TFT panel
 	LPC178X_LCD->lcd_ctrl &= ~(0x1<<7);  // single panel
 	LPC178X_LCD->lcd_ctrl &= ~(0x1<<8);  // RGB normal sequence
