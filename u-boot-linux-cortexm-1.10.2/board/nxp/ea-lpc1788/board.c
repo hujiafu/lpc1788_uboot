@@ -792,7 +792,11 @@ void board_video_init(GraphicDevice *pGD){
 	LPC178X_LCD->lcd_timv |= (pGD->modeIdent[4])<<16; 
 	LPC178X_LCD->lcd_timv |= ((pGD->modeIdent[6]) - 1)<<10; 
 	LPC178X_LCD->lcd_timv |= (pGD->winSizeY) - 1; 
-	 
+	
+	// init lcd base addr	
+	LPC178X_LCD->lcd_upbase = pGD->frameAdrs; 
+	LPC178X_LCD->lcd_lpbase = pGD->frameAdrs; 
+
 	GLCD_Ctrl(1);
 
 	pwm_init();
