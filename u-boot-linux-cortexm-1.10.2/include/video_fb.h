@@ -68,7 +68,7 @@ typedef struct {
     unsigned int plnSizeY;
     unsigned int winSizeX;
     unsigned int winSizeY;
-    char modeIdent[80];
+    unsigned int modeIdent[80];
 } GraphicDevice;
 
 

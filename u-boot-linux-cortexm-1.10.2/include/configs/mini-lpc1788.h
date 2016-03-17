@@ -63,7 +63,7 @@
 /*
  * Monitor prompt
  */
-#define CONFIG_SYS_PROMPT		"EA-LPC1788> "
+#define CONFIG_SYS_PROMPT		"MINI-LPC1788> "
 
 /*
  * We want to call the CPU specific initialization
@@ -198,7 +198,7 @@
 #define CONFIG_SYS_RAM_CS		0       /* 0 .. 3 */
 #define CONFIG_SYS_RAM_BASE		(0xA0000000 +			\
 					 (CONFIG_SYS_RAM_CS * 0x10000000))
-#define CONFIG_SYS_RAM_SIZE		(31 * 1024 * 1024)
+#define CONFIG_SYS_RAM_SIZE		(64 * 1024 * 1024)
 /*
  * Buffers for Ethernet DMA (cannot be in the internal System RAM)
  */
@@ -212,7 +212,7 @@
  * Configuration of the external Flash memory
  */
 /* Define this to enable NOR FLash support */
-#define CONFIG_SYS_FLASH_CS		0
+#undef CONFIG_SYS_FLASH_CS
 
 #if defined(CONFIG_SYS_FLASH_CS)
 #define CONFIG_SYS_FLASH_CFG		0x81 /* 16 bit, Byte Lane enabled */
@@ -247,7 +247,7 @@
 #endif
 
 #define CONFIG_ENV_SIZE			(4 * 1024)
-#define CONFIG_ENV_ADDR			CONFIG_SYS_FLASH_BANK1_BASE
+#define CONFIG_ENV_ADDR			CONFIG_SYS_RAM_BASE
 #define CONFIG_INFERNO			1
 #define CONFIG_ENV_OVERWRITE		1
 
@@ -281,29 +281,6 @@
 #define CONFIG_BAUDRATE			115200
 #define CONFIG_SYS_BAUDRATE_TABLE	{ 9600, 19200, 38400, 57600, 115200 }
 
-/*
- * Ethernet configuration
- */
-#define CONFIG_NET_MULTI
-#define CONFIG_LPC178X_ETH
-#define CONFIG_LPC178X_ENET_USE_PHY_RMII
-#define CONFIG_LPC178X_ETH_DIV_SEL	7	/* HCLK/28 */
-/*
- * Used only for the final PHY reset, see `lpc178x_phy_final_reset()`.
- * For other code, we use automatic PHY discovery.
- */
-#define CONFIG_LPC178X_ETH_PHY_ADDR	1
-
-/*
- * Ethernet RX buffers are malloced from the internal SRAM (more precisely,
- * from CONFIG_SYS_MALLOC_LEN part of it). Each RX buffer has size of 1536B.
- * So, keep this in mind when changing the value of the following config,
- * which determines the number of ethernet RX buffers (number of frames which
- * may be received without processing until overflow happens).
- */
-#define CONFIG_SYS_RX_ETH_BUFFER	5
-
-#define CONFIG_SYS_TX_ETH_BUFFER	8
 
 /*
  * Console I/O buffer size
@@ -351,7 +328,7 @@
 #undef CONFIG_CMD_IMLS
 #undef CONFIG_CMD_LOADS
 #undef CONFIG_CMD_MISC
-#define CONFIG_CMD_NET	/* Obligatory for the Ethernet driver to build */
+#undef CONFIG_CMD_NET	/* Obligatory for the Ethernet driver to build */
 #undef CONFIG_CMD_NFS
 #undef CONFIG_CMD_SOURCE
 #undef CONFIG_CMD_XIMG
@@ -371,10 +348,10 @@
  */
 #define CONFIG_BOOTDELAY		3
 #define CONFIG_ZERO_BOOTDELAY_CHECK
-#define CONFIG_HOSTNAME			ea-lpc1788
-#define CONFIG_BOOTARGS			"lpc178x_platform=ea-lpc1788 "\
+#define CONFIG_HOSTNAME			mini-lpc1788
+#define CONFIG_BOOTARGS			"lpc178x_platform=mini-lpc1788 "\
 					"console=ttyS0,115200 panic=10"
-#define CONFIG_BOOTCOMMAND		"run flashboot"
+#define CONFIG_BOOTCOMMAND		"run mmcboot"
 
 /*
  * This ensures that the board-specific misc_init_r() gets invoked.
@@ -386,15 +363,10 @@
  */
 #define CONFIG_EXTRA_ENV_SETTINGS				\
 	"loadaddr=0xA0000000\0"					\
-	"addip=setenv bootargs ${bootargs} ip=${ipaddr}:${serverip}:${gatewayip}:${netmask}:${hostname}:eth0:off\0"				\
+	"addip=setenv bootargs ${bootargs} ${hostname}\0"				\
 	"flashaddr=80020000\0"					\
-	"flashboot=run addip;bootm ${flashaddr}\0"		\
-	"ethaddr=C0:B1:3C:88:88:84\0"				\
-	"ipaddr=172.17.4.206\0"					\
-	"serverip=172.17.0.1\0"					\
+	"mmcboot=run addip;bootm ${loadaddr}\0"		\
 	"image=lpc178x/uImage\0"				\
-	"netboot=tftp ${image};run addip;bootm\0"		\
-	"update=tftp ${image};"					\
 	"prot off ${flashaddr} +${filesize};"			\
 	"era ${flashaddr} +${filesize};"			\
 	"cp.b ${loadaddr} ${flashaddr} ${filesize}\0"

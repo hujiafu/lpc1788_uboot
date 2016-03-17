@@ -25,7 +25,7 @@
 //#ifndef CONFIG_SYS_DEFAULT_VIDEO_MODE
 //#define CONFIG_SYS_DEFAULT_VIDEO_MODE	0x301
 #ifndef CONFIG_SYS_DEFAULT_VIDEO_MODE
-#define CONFIG_SYS_DEFAULT_VIDEO_MODE	0x211
+#define CONFIG_SYS_DEFAULT_VIDEO_MODE	0x212
 #endif
 
 /* Some mode definitions */
@@ -81,9 +81,10 @@ struct ctfb_vesa_modes {
 #define RES_MODE_1152x864	4
 #define RES_MODE_1280x1024	5
 #define RES_MODE_480x272	6
-#define RES_MODES_COUNT		7
+#define RES_MODE_800x480	7
+#define RES_MODES_COUNT		8
 
-#define VESA_MODES_COUNT 20
+#define VESA_MODES_COUNT 21
 
 extern const struct ctfb_vesa_modes vesa_modes[];
 extern const struct ctfb_res_modes res_mode_init[];
