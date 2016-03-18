@@ -38,3 +38,14 @@ lpc178x_periph_enable(u32 pconp_mask, int enable)
 	else
 		LPC178X_SCC->pconp &= ~pconp_mask;
 }
+
+void __attribute__((section(".ramcode")))
+     __attribute__((long_call))
+lpc178x_boost_enable(int enable)
+{
+	if (enable)
+		LPC178X_SCC->pboost = 0x3;
+	else
+		LPC178X_SCC->pboost = 0;
+}
+

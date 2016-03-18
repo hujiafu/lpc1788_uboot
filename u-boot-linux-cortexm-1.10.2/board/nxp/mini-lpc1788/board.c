@@ -741,13 +741,22 @@ void board_video_init(GraphicDevice *pGD){
 	
 	long pclk;
 	int lcd_div;
+	unsigned int *pboost;
+	unsigned int *pconp;
 
+	lpc178x_periph_enable(LPC178X_SCC_PCONP_LCD_MSK, 1);
+
+	pboost = (unsigned int *)0x400FC1B0;
+	pconp= (unsigned int *)0x400FC0C4;
+
+	printf("pboost = 0x%x\n", *pboost);
+	printf("pconp = 0x%x\n", *pconp);
+	
 	pclk = clock_get(CLOCK_SYSTICK);
 	lcd_div = pclk / (pGD->modeIdent[0] * 1000000);
 
 	printf("lcd_div = %d\n", lcd_div);
 
-	lpc178x_periph_enable(LPC178X_SCC_PCONP_LCD_MSK, 1);
 	
 	GLCD_Ctrl(0);
 

@@ -55,6 +55,7 @@ void cortex_m3_soc_init(void)
 	 */
 	lpc178x_periph_enable(uart_pconp_mask[CONFIG_LPC178X_UART_PORT], 1);
 #endif
+	lpc178x_boost_enable(1);
 	/*
 	 * Configure the memory protection unit (MPU) to allow full access to
 	 * the whole 4GB address space.

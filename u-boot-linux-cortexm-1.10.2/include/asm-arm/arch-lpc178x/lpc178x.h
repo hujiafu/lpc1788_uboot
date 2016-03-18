@@ -114,8 +114,8 @@ struct lpc178x_scc_regs {
 	u32 rsv3;
 	u32 pclksel;	/* Peripheral Clock Selection register */
 	/* 0x400FC1AC */
-	//u32 rsv4[7];
-	u32 rsv4[2];
+	u32 rsv4[1];
+	u32 pboost;	/* 0x400FC1B0*/
 	u32 spifisel;
 	u32 lcd_cfg;
 	u32 rsv5[1];
@@ -151,6 +151,10 @@ struct lpc178x_scc_regs {
 void __attribute__((section(".ramcode")))
      __attribute__ ((long_call))
 lpc178x_periph_enable(u32 pconp_mask, int enable);
+
+void __attribute__((section(".ramcode")))
+     __attribute__ ((long_call))
+lpc178x_boost_enable(int enable);
 
 /*
  * Clocks enumeration
