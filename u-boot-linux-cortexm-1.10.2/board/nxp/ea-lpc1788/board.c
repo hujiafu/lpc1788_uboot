@@ -46,6 +46,7 @@
  */
 #define LPC178X_EMC_AM		0x89
 
+#if defined(CONFIG_LPC178X_EMC_HALFCPU)
 /*
  * Timing for 54MHz bus
  */
@@ -79,6 +80,42 @@
 /* Load mode register to active command time (tMRD) = 1 clock */
 #define LPC178X_EMC_T_MRD	1
 
+#else
+
+/*
+ * Timing for 108MHz bus
+ */
+#define LPC178X_EMC_RAS		4
+#define LPC178X_EMC_CAS		4
+/* Command delayed strategy, using EMCCLKDELAY */
+#define LPC178X_EMC_RDCFG_RD	2
+/* Precharge command period (tRP) = 1 EMC clock cycle */
+#define LPC178X_EMC_T_RP	2
+/* Active to precharge command perion (tRAS) = 3 clocks */
+#define LPC178X_EMC_T_RAS	6
+/* Self-refresh exit time (tSREX) = 4 clocks */
+#define LPC178X_EMC_T_SREX	8
+/* Last-data-out to active command time (tAPR) = 2 clocks */
+#define LPC178X_EMC_T_APR	4
+/* Data-in to active command (tDAL) = 2 clocks */
+#define LPC178X_EMC_T_DAL	4
+/* Write recovery time (tWR) = 2 clocks */
+#define LPC178X_EMC_T_WR	4
+/* Active to active command perion (tRC) = 4 clocks */
+#define LPC178X_EMC_T_RC	8
+/*
+ * Auto-refresh period and auto-refresh to active command period
+ * (tRFC) = 4 clocks
+ */
+#define LPC178X_EMC_T_RFC	8
+/* Exit self-refresh to active command time (tXSR) = 4 clocks */
+#define LPC178X_EMC_T_XSR	8
+/* Active bank A to active bank B latency (tRRD) = 1 clock */
+#define LPC178X_EMC_T_RRD	2
+/* Load mode register to active command time (tMRD) = 1 clock */
+#define LPC178X_EMC_T_MRD	2
+
+#endif
 /*
  * Refresh timer.
  * Indicates the multiple of 16 CCLKs between SDRAM refresh cycles.

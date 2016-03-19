@@ -60,6 +60,7 @@
 
 #define CONFIG_SYS_BOARD_REV_STR	"1"
 
+#define CONFIG_CMD_MYTESTCMD	1
 /*
  * Monitor prompt
  */
@@ -206,7 +207,7 @@
 /*
  * Use the CPU_CLOCK/2 for EMC
  */
-#define CONFIG_LPC178X_EMC_HALFCPU
+#undef CONFIG_LPC178X_EMC_HALFCPU
 
 /*
  * Configuration of the external Flash memory

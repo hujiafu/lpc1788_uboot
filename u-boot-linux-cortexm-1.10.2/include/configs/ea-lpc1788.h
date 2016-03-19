@@ -216,13 +216,23 @@
 
 #if defined(CONFIG_SYS_FLASH_CS)
 #define CONFIG_SYS_FLASH_CFG		0x81 /* 16 bit, Byte Lane enabled */
+#if defined(CONFIG_LPC178X_EMC_HALFCPU)
 #define CONFIG_SYS_FLASH_WE		0x2
 #define CONFIG_SYS_FLASH_OE		0x2
 #define CONFIG_SYS_FLASH_RD		0x1f
 #define CONFIG_SYS_FLASH_PAGE		0x1f
 #define CONFIG_SYS_FLASH_WR		0x1f
 #define CONFIG_SYS_FLASH_TA		0x1f
+#else
+#define CONFIG_SYS_FLASH_WE		0x4
+#define CONFIG_SYS_FLASH_OE		0x4
+#define CONFIG_SYS_FLASH_RD		0x3f
+#define CONFIG_SYS_FLASH_PAGE		0x3f
+#define CONFIG_SYS_FLASH_WR		0x3f
+#define CONFIG_SYS_FLASH_TA		0x3f
 
+
+#endif
 #define CONFIG_SYS_FLASH_BANK1_BASE	0x80000000 /* hardwired for CS0 */
 
 #define CONFIG_SYS_FLASH_CFI		1
@@ -288,6 +298,7 @@
 #define CONFIG_LPC178X_ETH
 #define CONFIG_LPC178X_ENET_USE_PHY_RMII
 #define CONFIG_LPC178X_ETH_DIV_SEL	7	/* HCLK/28 */
+//#define CONFIG_LPC178X_ETH_DIV_SEL	11	/* HCLK/28 */
 /*
  * Used only for the final PHY reset, see `lpc178x_phy_final_reset()`.
  * For other code, we use automatic PHY discovery.
@@ -414,6 +425,8 @@
 #define CONFIG_VGA_AS_SINGLE_DEVICE
 #define CONFIG_VIDEO_LPC1788
 #define LCD_VIDEO_ADDR	(CONFIG_SYS_RAM_BASE + CONFIG_SYS_RAM_SIZE)
+
+#define CONFIG_CMD_MYTESTCMD	1
 
 
 #endif /* __CONFIG_H */
