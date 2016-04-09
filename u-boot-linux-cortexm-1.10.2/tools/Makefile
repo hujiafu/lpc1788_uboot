@@ -123,7 +123,7 @@ ifeq ($(VENDOR),ronetix)
 LOGO_BMP= logos/ronetix.bmp
 endif
 ifeq ($(VENDOR),nxp)
-LOGO_BMP= logos/esd.bmp
+LOGO_BMP= logos/joint_lage.bmp
 endif
 
 # now $(obj) is defined
