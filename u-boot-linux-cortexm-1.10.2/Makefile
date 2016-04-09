@@ -3245,6 +3245,9 @@ ea-lpc1788_config : unconfig
 mini-lpc1788_config : unconfig
 	@$(MKCONFIG) $(@:_config=) arm arm_cortexm3 mini-lpc1788 nxp lpc178x
 
+joint-lpc1788_config : unconfig
+	@$(MKCONFIG) $(@:_config=) arm arm_cortexm3 joint-lpc1788 nxp lpc178x
+
 twr-k60n512_config : unconfig
 	@$(MKCONFIG) $(@:_config=) arm arm_cortexm3 twr-k60n512 freescale kinetis
 

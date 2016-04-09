@@ -1,4 +1,9 @@
-make CROSS_COMPILE=/usr/local/arm/arm-2010q1/bin/arm-uclinuxeabi- mini-lpc1788_config
+export CROSS_COMPILE=/usr/local/arm/arm-2010q1/bin/arm-uclinuxeabi-
+
+make clean
+#make ea-lpc1788_config
+#make mini-lpc1788_config
+make joint-lpc1788_config
 
 sleep 2
 

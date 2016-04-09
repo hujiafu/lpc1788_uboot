@@ -229,6 +229,8 @@ endif
 
 $(LOGO_H):	$(obj)bmp_logo $(LOGO_BMP)
 	$(obj)./bmp_logo $(LOGO_BMP) >$@
+	sed -i 's/unsigned short/const unsigned short/g' $@
+	sed -i 's/unsigned char/const unsigned char/g' $@
 
 #########################################################################
 
