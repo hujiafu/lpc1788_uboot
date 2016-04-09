@@ -1100,11 +1100,15 @@ int video_display_bitmap (ulong bmp_image, int x, int y)
 /*****************************************************************************/
 
 #ifdef CONFIG_VIDEO_LOGO
-void logo_plot (void *screen, int width, int x, int y)
+void logo_plot (void *screen, int width, int height, int x, int y)
 {
 
 	int xcount, i;
 	int skip   = (width - VIDEO_LOGO_WIDTH) * VIDEO_PIXEL_SIZE;
+	int skip_left = skip >> 1;
+	int skip_right = skip_left;
+	int skipv  = (height - VIDEO_LOGO_HEIGHT);
+	int skipv_upper = skipv >> 1;
 	int ycount = video_logo_height;
 	unsigned char r, g, b, *logo_red, *logo_blue, *logo_green;
 	unsigned char *source;
@@ -1139,10 +1143,12 @@ void logo_plot (void *screen, int width, int x, int y)
 		}
 	}
 
+	dest += skipv_upper * width * VIDEO_PIXEL_SIZE;
 	while (ycount--) {
 #if defined(VIDEO_FB_16BPP_PIXEL_SWAP)
 		int xpos = x;
 #endif
+		dest += skip_left;
 		xcount = VIDEO_LOGO_WIDTH;
 		while (xcount--) {
 			r = logo_red[*source - VIDEO_LOGO_LUT_OFFSET];
@@ -1187,7 +1193,8 @@ void logo_plot (void *screen, int width, int x, int y)
 			source++;
 			dest += VIDEO_PIXEL_SIZE;
 		}
-		dest += skip;
+		//dest += skip;
+		dest += skip_right;
 	}
 #ifdef CONFIG_VIDEO_BMP_LOGO
 	free (logo_red);
@@ -1235,7 +1242,7 @@ static void *video_logo (void)
 	}
 #endif /* CONFIG_SPLASH_SCREEN */
 
-	logo_plot (video_fb_address, VIDEO_COLS, 0, 0);
+	logo_plot (video_fb_address, VIDEO_COLS, VIDEO_ROWS, 0, 0);
 
 	sprintf (info, " %s", &version_string);
 
