@@ -398,6 +398,8 @@ static const struct lpc178x_gpio_pin_config ea_lpc1788_gpio[] = {
 	 */
 	/* P4.30 (D) = NOR FLash CS0 */
 	{{4, 30}, LPC178X_GPIO_CONFIG_D(1, LPC178X_NO_PULLUP, 0, 0, 1, 0)},
+	/* P4.31 (D) = NOR FLash CS1 */
+	{{4, 31}, LPC178X_GPIO_CONFIG_D(1, LPC178X_NO_PULLUP, 0, 0, 1, 0)},
 	/* P4.24 (D) = NOR FLash BOE */
 	{{4, 24}, LPC178X_GPIO_CONFIG_D(1, LPC178X_NO_PULLUP, 0, 0, 1, 0)},
 	/* P4.25 (D) = NOR FLash BWE */
@@ -734,13 +736,18 @@ int board_eth_init(bd_t *bis)
 #ifdef CONFIG_FLASH_CFI_LEGACY
 ulong board_flash_get_legacy (ulong base, int banknum, flash_info_t *info)
 {
+#if 0
 	if (banknum == 0) {	/* non-CFI flash */
 		info->portwidth = FLASH_CFI_16BIT;
 		info->chipwidth = FLASH_CFI_BY16;
-		info->interface = FLASH_CFI_X16;
+		//info->interface = FLASH_CFI_X16;
+		info->interface = FLASH_CFI_X16X32;
 		return 1;
 	} else
 		return 0;
+#else
+		return 0;
+#endif
 }
 #endif
 

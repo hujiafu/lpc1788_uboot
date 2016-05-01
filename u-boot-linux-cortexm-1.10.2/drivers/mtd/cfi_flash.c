@@ -346,6 +346,7 @@ void flash_write_cmd (flash_info_t * info, flash_sect_t sect,
 		debug ("fwc addr %p cmd %x %4.4x 16bit x %d bit\n", addr,
 		       cmd, cword.w,
 		       info->chipwidth << CFI_FLASH_SHIFT_WIDTH);
+		//printf("cword.w = 0x%x, addr = 0x%x\n", cword.w, addr);
 		flash_write16(cword.w, addr);
 		break;
 	case FLASH_CFI_32BIT:
@@ -688,6 +689,7 @@ static int flash_write_cfiword (flash_info_t * info, ulong dest,
 		flag = ((flash_read8(dstaddr) & cword.c) == cword.c);
 		break;
 	case FLASH_CFI_16BIT:
+		//printf("write 0x%x\n", dstaddr);
 		flag = ((flash_read16(dstaddr) & cword.w) == cword.w);
 		break;
 	case FLASH_CFI_32BIT:
@@ -700,8 +702,10 @@ static int flash_write_cfiword (flash_info_t * info, ulong dest,
 		flag = 0;
 		break;
 	}
-	if (!flag)
+	if (!flag){
+		printf("hjf debug 0x%x\n", dstaddr);
 		return ERR_NOT_ERASED;
+	}
 
 	/* Disable interrupts which might cause a timeout here */
 	flag = disable_interrupts ();
@@ -735,6 +739,8 @@ static int flash_write_cfiword (flash_info_t * info, ulong dest,
 		flash_write8(cword.c, dstaddr);
 		break;
 	case FLASH_CFI_16BIT:
+		//modify by hujiafu
+		//printf("cword.w = 0x%x, dstaddr = 0x%x\n", cword.w, dstaddr);
 		flash_write16(cword.w, dstaddr);
 		break;
 	case FLASH_CFI_32BIT:
@@ -1537,8 +1543,10 @@ static int flash_detect_legacy(phys_addr_t base, int banknum)
 					info->addr_unlock1 = 0x2AAA;
 					info->addr_unlock2 = 0x5555;
 				} else {
-					info->addr_unlock1 = 0x5555;
-					info->addr_unlock2 = 0x2AAA;
+					//info->addr_unlock1 = 0x5555;
+					//info->addr_unlock2 = 0x2AAA;
+					info->addr_unlock1 = 0x555;
+					info->addr_unlock2 = 0x2AA;
 				}
 				flash_read_jedec_ids(info);
 				debug("JEDEC PROBE: ID %x %x %x\n",
@@ -1636,6 +1644,7 @@ static int __flash_detect_cfi (flash_info_t * info, struct cfi_qry *qry)
 			info->addr_unlock1 = 0x555;
 			info->addr_unlock2 = 0x2aa;
 
+			printf("hjf debug  cif detect ==========================\n");
 			/*
 			 * modify the unlock address if we are
 			 * in compatibility mode
@@ -1649,6 +1658,7 @@ static int __flash_detect_cfi (flash_info_t * info, struct cfi_qry *qry)
 			{
 				info->addr_unlock1 = 0xaaa;
 				info->addr_unlock2 = 0x555;
+				printf("cif detect 16bit\n");
 			}
 
 			info->name = "CFI conformant";
@@ -1662,6 +1672,7 @@ static int __flash_detect_cfi (flash_info_t * info, struct cfi_qry *qry)
 static int flash_detect_cfi (flash_info_t * info, struct cfi_qry *qry)
 {
 	debug ("flash detect cfi\n");
+	printf ("hjf debug flash detect cfi\n");
 
 	for (info->portwidth = CONFIG_SYS_FLASH_CFI_WIDTH;
 	     info->portwidth <= FLASH_CFI_64BIT; info->portwidth <<= 1) {
@@ -1747,6 +1758,7 @@ ulong flash_get_size (phys_addr_t base, int banknum)
 	int erase_region_count;
 	struct cfi_qry qry;
 
+	printf("hjf debug flash_get_size\n");
 	memset(&qry, 0, sizeof(qry));
 
 	info->ext_addr = 0;
@@ -1916,6 +1928,8 @@ unsigned long flash_init (void)
 {
 	unsigned long size = 0;
 	int i;
+
+	printf("hjf debug flash_init\n");
 #if defined(CONFIG_SYS_FLASH_AUTOPROTECT_LIST)
 	struct apl_s {
 		ulong start;
@@ -1934,6 +1948,7 @@ unsigned long flash_init (void)
 	/* Init: no FLASHes known */
 	for (i = 0; i < CONFIG_SYS_MAX_FLASH_BANKS; ++i) {
 		flash_info[i].flash_id = FLASH_UNKNOWN;
+		printf("hjf debug flash_init, 1\n");
 
 		if (!flash_detect_legacy (BANK_BASE(i), i))
 			flash_get_size (BANK_BASE(i), i);
