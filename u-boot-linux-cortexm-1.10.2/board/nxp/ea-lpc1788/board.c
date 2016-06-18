@@ -386,6 +386,11 @@ static const struct lpc178x_gpio_pin_config ea_lpc1788_gpio[] = {
 	{{1, 16}, LPC178X_GPIO_CONFIG_D(1, LPC178X_NO_PULLUP, 0, 0, 0, 0)},
 	/* P1.17 (D) = RMII MDIO */
 	{{1, 17}, LPC178X_GPIO_CONFIG_D(1, LPC178X_NO_PULLUP, 0, 0, 0, 0)},
+	
+	/* P1.13 (D) = RX_DV CFG NORMAL IO*/
+	{{1, 13}, LPC178X_GPIO_CONFIG_D(0, LPC178X_NO_PULLUP, 0, 0, 0, 0)},
+	/* P1.18 (D) = RST */
+	{{1, 18}, LPC178X_GPIO_CONFIG_D(0, LPC178X_NO_PULLUP, 0, 0, 0, 0)},
 #endif /* CONFIG_LPC178X_ETH */
 #ifdef CONFIG_SYS_FLASH_CS
 	/*
