@@ -24,6 +24,7 @@
  */
 
 #include <config.h>
+#include <asm/arch/lpc178x_gpio.h>
 
 /*
  * Define DEBUG to enable debug() messages in this module
@@ -911,8 +912,26 @@ out:
  */
 static int lpc178x_eth_init(struct eth_device *dev, bd_t *bd)
 {
+	volatile unsigned int i;
+	struct lpc178x_gpio_dsc phy_rst;
+	struct lpc178x_gpio_dsc rx_dv;
 	struct lpc178x_eth_dev *mac = to_lpc178x_eth(dev);
 	int rv;
+
+	phy_rst.port = LPC178X_GPIO_PORT1;
+	phy_rst.pin = 18;
+	rx_dv.port = LPC178X_GPIO_PORT1;
+	rx_dv.pin = 13;
+
+	//DP83848K set RMII mode
+	lpc178x_gpio_config_direction(&rx_dv, 1);
+	lpc178x_gpout_set(&rx_dv, 1);
+
+	//DP83848K reset
+	lpc178x_gpio_config_direction(&phy_rst, 1);
+	lpc178x_gpout_set(&phy_rst, 0);
+	for(i=0; i<1000; i++);
+	lpc178x_gpout_set(&phy_rst, 1);
 
 	/*
 	 * Init hw

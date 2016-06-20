@@ -22,6 +22,14 @@
 #ifndef _LPC178X_GPIO_H_
 #define _LPC178X_GPIO_H_
 
+#define LPC178X_GPIO_PORT0	0
+#define LPC178X_GPIO_PORT1	1
+#define LPC178X_GPIO_PORT2	2
+#define LPC178X_GPIO_PORT3	3
+#define LPC178X_GPIO_PORT4	4
+#define LPC178X_GPIO_PORT5	5
+
+
 /*
  * Bits and bit groups inside the IOCON registers
  */
@@ -85,14 +93,14 @@ struct lpc178x_gpio_dsc {
 
 struct lpc178x_gpio_pin_config {
 	struct lpc178x_gpio_dsc dsc;
-	u32 regval;	/* Value for writing into the IOCON register */
+	unsigned int regval;	/* Value for writing into the IOCON register */
 };
 
 /*
  * Configure the specified GPIO pin.
  * Returns 0 on success, -EINVAL otherwise.
  */
-int lpc178x_gpio_config(const struct lpc178x_gpio_dsc *dsc, u32 regval);
+int lpc178x_gpio_config(const struct lpc178x_gpio_dsc *dsc, unsigned int regval);
 
 /*
  * Configure a set of GPIO pins using the given configuration table.
