@@ -1634,9 +1634,16 @@ static int __flash_detect_cfi (flash_info_t * info, struct cfi_qry *qry)
 			info->cfi_offset = flash_offset_cfi[cfi_offset];
 			debug ("device interface is %d\n",
 			       info->interface);
+			printf ("device interface is %d\n",
+			       info->interface);
 			debug ("found port %d chip %d ",
 			       info->portwidth, info->chipwidth);
+			printf ("found port %d chip %d ",
+			       info->portwidth, info->chipwidth);
 			debug ("port %d bits chip %d bits\n",
+			       info->portwidth << CFI_FLASH_SHIFT_WIDTH,
+			       info->chipwidth << CFI_FLASH_SHIFT_WIDTH);
+			printf ("port %d bits chip %d bits\n",
 			       info->portwidth << CFI_FLASH_SHIFT_WIDTH,
 			       info->chipwidth << CFI_FLASH_SHIFT_WIDTH);
 
